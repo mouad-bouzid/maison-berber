@@ -1,0 +1,45 @@
+/* ==========================================================================
+   Motion layer — Lenis rules, Light Rays, Blur Text, Star Border
+   No colours or text are defined here: everything reads the site's own tokens.
+   ========================================================================== */
+
+/* ===== Lenis (official base rules) ===== */
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+.lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}
+.lenis.lenis-stopped{overflow:clip}
+.lenis.lenis-smooth iframe{pointer-events:none}
+
+/* ===== Light Rays (hero background) ===== */
+.light-rays{position:absolute;inset:0;z-index:-1;width:100%;height:100%;pointer-events:none;mix-blend-mode:screen;opacity:0;transition:opacity 1.6s var(--ease,ease)}
+.light-rays.is-on{opacity:.55}
+
+/* ===== Blur Text (hero title) ===== */
+.bt-word{display:inline-block;will-change:filter,transform,opacity}
+
+/* ===== Star Border (primary CTA) ===== */
+.star-border{position:relative}
+.star-border__ring{position:absolute;inset:-8px;z-index:2;padding:2px;border-radius:var(--r-pill,999px);overflow:hidden;pointer-events:none;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.star-border__ring i{position:absolute;width:300%;height:50%;opacity:.8;border-radius:50%;
+  background:radial-gradient(circle,var(--accent,#E4582C),transparent 10%)}
+.star-border__ring i:first-child{right:-250%;bottom:-11px;animation:sb-bottom 7s linear infinite alternate}
+.star-border__ring i:last-child{left:-250%;top:-10px;animation:sb-top 7s linear infinite alternate}
+@keyframes sb-bottom{from{transform:translate(0,0);opacity:1}to{transform:translate(-100%,0);opacity:0}}
+@keyframes sb-top{from{transform:translate(0,0);opacity:1}to{transform:translate(100%,0);opacity:0}}
+
+/* ===== Hero intro: hidden until JS takes over (failsafe reveals after 3s if JS never runs) ===== */
+@media (prefers-reduced-motion:no-preference){
+  .hero__title,.hero__eyebrow,.hero__sub,.hero__actions,.booking{opacity:0;animation:mo-failsafe .01s 3s forwards}
+}
+@keyframes mo-failsafe{to{opacity:1}}
+
+/* While a reveal is running, CSS hover transitions must not fight GSAP */
+.mo-anim{transition:none!important}
+
+/* ===== Reduced motion ===== */
+@media (prefers-reduced-motion:reduce){
+  .star-border__ring{display:none}
+  .light-rays{transition:none}
+}

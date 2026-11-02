@@ -1,0 +1,49 @@
+/* ==========================================================================
+   Maison Berber Ait Lhsen: motion layer
+   Works with: vendor/gsap.min.js, vendor/ScrollTrigger.min.js, vendor/lenis.min.js,
+   js/light-rays.js, js/motion.js. Uses only the site's own CSS variables (no new colours).
+   ========================================================================== */
+
+/* ---- Lenis base (from lenis.css) ---- */
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+.lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}
+.lenis.lenis-stopped{overflow:clip}
+.lenis.lenis-smooth iframe{pointer-events:none}
+
+/* ---- Light Rays canvas (inside .hero, under the dark gradient overlay) ---- */
+.hero__rays{position:absolute;inset:0;z-index:-1;width:100%;height:100%;display:block;pointer-events:none;mix-blend-mode:screen;opacity:.5;
+  -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 55%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0%,#000 55%,transparent 100%)}
+
+/* ---- Star Border (vanilla port of the React Bits effect) around the main hero CTA ---- */
+.star-border{position:relative;display:inline-flex;isolation:isolate;border-radius:var(--r-pill)}
+.star-border>.cta-orbit{flex:1 1 auto}
+.star-border__track{position:absolute;inset:-3px;z-index:-1;border-radius:var(--r-pill);overflow:hidden;pointer-events:none}
+.star-border__star{position:absolute;width:300%;height:50%;border-radius:50%;opacity:.7;background:radial-gradient(circle,var(--accent),transparent 10%)}
+.star-border__star--b{bottom:-11px;right:-250%;animation:mb-star-b 6s linear infinite alternate}
+.star-border__star--t{top:-10px;left:-250%;animation:mb-star-t 6s linear infinite alternate}
+@keyframes mb-star-b{0%{transform:translate(0,0);opacity:1}100%{transform:translate(-100%,0);opacity:0}}
+@keyframes mb-star-t{0%{transform:translate(0,0);opacity:1}100%{transform:translate(100%,0);opacity:0}}
+
+/* ---- Blur Text: words are wrapped by motion.js ---- */
+.blur-word{display:inline-block;will-change:transform,filter,opacity}
+
+/* ---- Hero entrance: pre-hide only when motion is allowed.
+   The "mb-failsafe" animation reveals everything after 3s if JS/GSAP never runs. ---- */
+@media (prefers-reduced-motion:no-preference){
+  .hero__title:not(.is-split),
+  .hero__eyebrow:not(.is-in),
+  .hero__sub:not(.is-in),
+  .hero__actions:not(.is-in),
+  .booking:not(.is-in){opacity:0;animation:mb-failsafe 0s linear 3s forwards}
+}
+@keyframes mb-failsafe{to{opacity:1}}
+
+/* While a card is being revealed, don't let the hover transition fight GSAP */
+.is-revealing{transition:none!important}
+
+/* ---- Reduced motion: no moving stars, no animation ---- */
+@media (prefers-reduced-motion:reduce){
+  .star-border__track{display:none}
+  .hero__rays{opacity:.4}
+}
